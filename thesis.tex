@@ -36,7 +36,7 @@
 
   % nessuna numerazione
   \pagenumbering{gobble} 
-  \input{pagina_iniziale}
+  \input{00_first_page}
 
   \clearpage
  
@@ -47,7 +47,7 @@
 %% Sezione Ringraziamenti opzionale
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \input{ringraziamenti}
+  \input{00_acknowledgements}
   \clearpage
   \pagestyle{plain} % nessuna intestazione e pie pagina con numero al centro
 
@@ -98,33 +98,30 @@
       \titlespacing*{\subsection}{0pt}{0.10in}{0.02in}
       
       % sommario
-      \input{sommario}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Nota
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Sommario e' un breve riassunto del lavoro svolto dove si descrive 
-%% l’obiettivo, l’oggetto della tesi, le metodologie e 
-%% le tecniche usate, i dati elaborati e la spiegazione delle conclusioni 
-%% alle quali siete arrivati.
-%% Il sommario dell’elaborato consiste al massimo di 3 pagine e deve contenere le seguenti informazioni: 
-%%   contesto e motivazioni
-%%   breve riassunto del problema affrontato
-%%   tecniche utilizzate e/o sviluppate
-%%   risultati raggiunti, sottolineando il contributo personale del laureando/a
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%      
+      \input{01_summary}      
       
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
       % lista dei capitoli
       %
       % \input oppure \include
       %
-      \input{capitolo1}
-      \input{capitolo2}
-      \input{capitolo3}
-      %\input{capitolo4}
-      
+      \input{introduction}
+      \input{motivation}
+      \input{problem}
+      \input{solution}
+	\input{related}
+	\input{implementation}
+	\input{experiments}
+	%\input{abstract}
+	%\input{introduction}
+	%\input{motivation}
+	%\input{problem}
+	%\input{solution}
+	%\input{conclusions}
+	%\input{experiment}
+	%\input{related}
+	%\input{acknowledgments}
+	%
       
     \endgroup
 
