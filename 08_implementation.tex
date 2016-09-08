@@ -1,0 +1,60 @@
+\chapter{Implementation} 
+
+\subsection{GraphAPI}
+
+The GraphAPI can be queried with a single POST request.
+Here's the code to compute the batch request:
+
+\begin{verbatim}
+[{'method': 'GET',
+    'relative_url': 'search?q={0}
+    &type=page&locale=it_IT&limit=50
+    &fields=id,name,link,about,email,
+    location,description,category,
+    contact_address,general_info,
+    general_manager,mission,phone,
+    website,members,cover,likes'
+    .format(
+        quote(unicode.encode(company_name,
+        encoding='utf-8')))
+} for company_name in company_list
+] + [
+{'method': 'GET',
+    'relative_url':'search?q={0}
+    &type=user&locale=it_IT&limit=50
+    &fields=id,name,link,about,email,
+    bio,work,location,description,
+    address,hometown,website,cover'
+    .format(
+        quote(unicode.encode(company_name,
+        encoding='utf-8')))
+} for company_name in company_list
+]
+        
+\end{verbatim}
+
+\subsection{Dandelion API}
+
+Dandelion API is a Semantic Text Analytics as a service product developed by Spaziodati.
+Dandelion is a product that implement context intelligence: it extracts meaning from an unstructured text and put it in context, obtaining actionable data.
+Instead of classic NLP technologies, Dandelion API leverages its underlying Knowledge Graph, without relying on traditional NLP pipelines. This makes it faster, more scalable, easier to customize and natively language independent. Dandelion API works well even on short and malformed texts in English, French, German, Italian and Portuguese.
+The main APIs available on Dandelion are: 
+\begin{itemize}
+    \item ENTITY EXTRACTION: find mentions of places, persons, brands and events in documents and social media. Easily get additional data about the entities.
+    \item TEXT \& CONTENT CLASSIFICATION: classify multilingual text into standard, pre-defined taxonomies or build your own custom classification scheme in minutes.
+    \item SENTIMENT ANALYSIS: identify whether the expressed opinion in short texts (like product reviews) is positive, negative, or neutral.
+    \item KEYWORDS / CONCEPTS EXTRACTION: automatically identify important, contextually relevant, concepts and key-phrases in articles and social media posts.
+    \item SEMANTIC SIMILARITY: compare two texts and compute their syntactic and semantic similarity. Understand when two texts are about the same subject.
+    \item ARTICLE EXTRACTION: extract clean text article from newspapers, blogs and other websites. Remove boilerplate and advertising and get the article full text and images.
+\end{itemize}
+
+\subsection{Atoka}
+
+Atoka is a lead generation business-to-business tool that helps companies to find new customers, receive news and updates from them and to generate prospect lists with few clicks.
+Thanks to the partership with Cerved Group, an Italian rating agency, and the usage of semantic analysis algorithms, Atoka offers affordable information about more than 6 millions Italian companies and economic subjects.
+Atoka provide addresses, contacts, websites, social networks links, management  team composition, corporate structure, economic and financial data.
+Atoka also enables new search options that overtake tradictional filters (like ATECO code), enabling the customer to make more precise and articulated queries.
+
+\subsection{Scikit-learn}
+
+Scikit-learn (formerly scikits.learn) is an open source machine learning library for the Python programming language. It features various classification, regression and clustering algorithms including support vector machines, random forests, gradient boosting, k-means and DBSCAN, and is designed to interoperate with the Python numerical and scientific libraries NumPy and SciPy.

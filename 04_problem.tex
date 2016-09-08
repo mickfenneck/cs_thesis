@@ -1,0 +1,73 @@
+\chapter{Problem Statement}
+
+\section{Problem Statement}
+Atoka Index stores information about Italian companies, including contacts like emails, official website and official Facebook page. Only the 1.62\% of the companies had a linked Facebook Page or user before the project. The aim is to fill more companies with Facebook social data. This topic was chosen because in today's world it has become more and more important to have social information about companies if you want to find potential customers through a lead generation technique.
+% A problem definition. What problem exactly you try to solve
+
+\subsection{Data Sources}
+The data sources used in the project are mainly two: Atoka Index and Facebook's GraphAPI. Data is analyzed and collected in a single index, used by the classifier to predict if a Facebook page belongs or not to a particular company.
+
+\subsubsection{Atoka}
+Atoka is a collection of data coming from Cerved Group S.P.A and crawlers made at SpazioDati, stored in a Elasticsearch index. This elasticsearch index is the heart of atoka.io, the lead generation tool in which the results of this project will be shown, added to data previously available.
+
+The most important fields of Atoka index used in the project are:
+\begin{itemize}
+    \item ateco: ateco code of the company, representing the classification of economical activities
+    \item description: a description of the company, used as a source for the research of keywords
+    \item emails: list of email of the company
+    \item entities: entities extracted with Dandelion API%\footnote{\url{https://dandelion.eu/}}
+    \item location: list of addresses of the company (companies may have more than a single office)
+    \item social: social media link of the company (facebook, twitter, linkedin, etc.)
+    \item website: official website of the company
+\end{itemize}
+
+It's important to underline the fact that not all the companies have a social and a website stored in Atoka index: the purpose, in fact, is to fill the missing values in social field.
+
+\subsubsection{GraphAPI} 
+
+The Graph API is the primary way to get data in and out of Facebook's social graph
+%\footnote{\url{https://developers.facebook.com/docs/graph-api}}
+. It's a low-level HTTP-based API that you can use to query data, post new stories, upload photos and a variety of other tasks that an app might need to do.
+The endpoint used for retrieving information is:
+\begin{verbatim}
+GET graph.facebook.com
+  /search?
+    q={your-query}&
+    [type={object-type}](#searchtypes)
+\end{verbatim}
+
+After being cleaned, the company name is put in the parameter q as q=\{your-query\}, for each company pages and user are searched inside Facebook graph (because many companies still use user instead of pages).
+For making less number of GraphAPI calls and reducing the HTTP request time we used a batch request, collecting multiple calls in only one. The limit imposed by Facebook is a maximum of 50 call per batch request. In this project, every batch request was made with 50 request.
+
+The Batch endpoint is:
+\begin{verbatim}
+curl \
+    -F 'access_token={TOKEN}' \
+    -F 'batch=[{ "method":"POST", \
+                 "relative_url":"search", \
+                 "body": {query_1} }, \
+               { "method":"POST", \
+                 "relative_url":"search", \
+                 "body": {query_2}]' \
+    https://graph.facebook.com
+\end{verbatim}
+
+%
+%
+%
+%
+%
+%
+
+\subsection{Problem Definition}
+Achieving the required functionality seems to be a three-step process. 
+
+First is to take companies' names from Atoka index, clean them and create a new elasticsearch index with Facebook responses. Facebook responses should contain the same information types of Atoka in order to compare them and predict which page should be the original one.
+
+After having stored Facebook's information, the second step is to query the new index and find which local Facebook page may match with the single company. This step in very important because it shifts the problem from a "one-vs-all" classification to a "one-vs-few" classification. The query selects a small subset that may match with the single company and makes possible to compare the company with only 20-30 pages/users instead of all the dataset.
+Selected the company's pages/users, a metrics script has to define some feature of the pages, giving a list of n-uples representing how similar the page/user data is to the company one.
+
+The last step is to train a classifier with the features computed in the previous step and then classify all the pages. At the end of the classification each company with a Facebook page should have the page linked by the classifier, with a percentage of how similar it is to that company's data.
+The classifier algorithm chosen is random forest. The choice was made for time reasons, for avoiding overfitting problems and because random forest is easier to be configured in an affordable way and amount of time.
+
+One big problem is that some company name are not equal or contained in their Facebook page because the society name is only used for legal purpose and the real name is actually different. In that case it's impossible to find the page with Facebook's GraphAPI and the result cannot be contained in the resulting set of the classifier.

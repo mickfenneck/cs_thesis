@@ -1,0 +1,18 @@
+CROWDFLOWER, DA ATECO 56 TUTTE QUELLE CON SITO FACEBOO 6K E QUALCOSA, TRAINATO, FACEVA CAGARE. SITI A MANO, SCHIFO PERCHè TRAINING SET TANTA ROBA MANCA MA TROPPI FALSI NEGATIVI. STORIA SU CF PER VERIFICARE, QUELLI NON MATCHATI PER VEDERE SE CI SONO DAVVERO, MATCHING SBAGLIATI SE C'ERA DISCORDANZA (matchato negativi). Non overfitting, correzione errori dei training set. soluzione più vicina/utilizzabile perché non essendo facebook non si può sapere quali siano tutte le pagine della compagnia.
+
+
+overfitting: random forest in generale non overfitta, moloto robusto per outliers, spesso dati sporchi o parziali random forest è il più adatto.
+
+grid search: randomizegridsearch. dai i parametri non come valori possibili ma come distribuzione. lui in maniera casuale campiona da tutte le distribuzioni, testa i parametri e prende i migliori. Fatto circa 100 campionamenti per il training. noi distribuzioni omogenee. tempi decenti, se omogeneo risultati decenti.
+
+con randomforest non necessario cross validation perché ha metodo che permette di stimare out-of-bug error ma non lo usiamo. visto che dataset molto skewed (pochissimi esempi positivi) poche coppie atoka-pg facebook, noi abbiamo fatto stratified three fold cross validation (campioniamo il training set, facciamo in modo che tutti abbiano sempre la stessa composizione in percentuale per ogni fold, rapporto numero positivi e negativi stesso) 1/3 train 2/3 testing e cambi (vedi codice per percentuale). di tutto il traing set usato il 60\% per fare train/test (scegliere il modello), poi 40\% rimanente per la validation. splitting random sul 60/40.
+
+Precision 95\% una ogni 20 la mettiamo sbagliata (in linea teorica). recall decente, ne perdiamo una ogni 10.
+
+
+SOME WORDS ABOUT HOW MANY COMPANIE HAS FACEBOOK NOW, SOME CONCLUSION WITH PROBLEM FACED ETC
+
+
+1.321.634 numero di pagine/utenti scaricati, PARTENDO DA 362154 con ateco 56 di atoka. 6355 che avevano pagina facebook.
+
+63172 con threshold 0.73, totali senza thr 79210. 

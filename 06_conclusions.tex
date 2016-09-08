@@ -1,0 +1,27 @@
+\chapter{conclusions} 
+%\section{Conclusions}
+
+The final data presents a precision that start from 0.9 and grow to 1 while the recall, starting above at 0.95, after a threshold of 0.75 drastically fall down, getting to zero very fast.\\
+The threshold chosen is 0.73, that assures a precision of 95\% and a recall of 90\%. This means that we give a wrong page one time over twenty and that we loose a good page one time over ten.
+
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{precision_recall_curve_idg_facebook.png}
+    \caption{Precision-Recall/Classification Threshold Plot}
+    \label{Fig.5}
+\end{figure}
+
+We chose a really high precision rather than a higher recall because in a business product like Atoka it is far more important not to give wrong information instead of losing a result that sometimes could be available.
+
+We started with 362154 companies with ATECO n.56 collected in Atoka index. The Facebook pages connected to that companies, before the project was only 6355. The number of pages collected in the first Facebook index was 1,321,634.
+
+After this work, with the threshold chosen at 0.73, the Facebook pages/users matched with Atoka companies are 63172. At a lower precision with a lot higher recall, founded with a threshold of 0.5, the number of matched pages amount at 79210.
+
+\begin{figure}
+\centering
+    \includegraphics[width=\columnwidth]{img/confronto_bw.png}
+    \caption{Percentage of Facebook Pages matched before and after the project}
+    \label{Fig.6}
+\end{figure}
+
+This project help Atoka to classify Facebook pages/user for a total of 10 times more than before the project. The percentage of companies with ATECO n.56 that now are matched with a Facebook has grown to 17.44\%.
