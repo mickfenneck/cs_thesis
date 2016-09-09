@@ -7,6 +7,7 @@ The following paragraph contains a description of how the solution to the proble
 
 The first module of the project has the task to get company names contained in the Atoka index and query Facebook Graph via Facebook GraphAPI in order to get a list of possible compatible pages.
 
+\begin{comment}
 \begin{figure}
 \centering
 \begin{tikzpicture}
@@ -30,6 +31,7 @@ The first module of the project has the task to get company names contained in t
     \caption{Process of data acquisition from Facebook GraphAPI}
     \label{Fig.2}
 \end{figure}
+\end{comment}
 
 For each company contained in Atoka index, the module generate a list of different possible alternatives to the legal name. This approach extends the time spent making multiple queries but makes sure to have the most number of possible Facebook Pages/Users per company. 
 
@@ -71,8 +73,14 @@ $ "ABC\ S.N.C" \Rightarrow "Ristorante\ da\ Luigi" $
 
 As briefly explained before, every name is added to a list and every company will have a query associated at each name in that list. This makes sure that every possible page name is searched inside Facebook Graph and stored in the new elasticsearch index. We found that is far better to call 10 queries for each company and find a reasonable amout of pages that may match rather than populate the index in less time but having less possibility to find a matching page.
 
-For using GraphAPI, Facebook requires a Developer account, verified with an individual mobile telephone number. Each account can have different applications running at the same time. The applications are identified with a text token and each of them can make at most 100M API calls per day\footnote{\url{https://developers.facebook.com/policy#thingstoknow}}. Even if the documentation shows that limit, experimentation found that the real limit is around 600 calls per 600 seconds, per token & per IP\footnote{\url{http://stackoverflow.com/questions/8713241/whats-the-facebooks-graph-api-call-limit}}. This bottleneck is overtaken creating 5 different accounts with 5 applications each, with a total of 25 applications.
-The module is structured in multiprocessing with one different process for each token, running simultaneously on a private server. A second trick used not to be banned from Facebook is making requests with a customized version of facepy\footnote{\url{https://github.com/jgorset/facepy}} library that changes proxy continuously and simulates request all around the world. Every request is made after a random delay timeout, chosen to simulate real world's typical application calls.
+For using GraphAPI, Facebook requires a Developer account, verified with an individual mobile telephone number. Each account can have different applications running at the same time. The applications are identified with a text token and each of them can make at most 100M API calls per day
+%\footnote{\url{https://developers.facebook.com/policy#thingstoknow}}
+. Even if the documentation shows that limit, experimentation found that the real limit is around 600 calls per 600 seconds, per token \& per IP
+%\footnote{\url{http://stackoverflow.com/questions/8713241/whats-the-facebooks-graph-api-call-limit}}
+. This bottleneck is overtaken creating 5 different accounts with 5 applications each, with a total of 25 applications.
+The module is structured in multiprocessing with one different process for each token, running simultaneously on a private server. A second trick used not to be banned from Facebook is making requests with a customized version of facepy
+%\footnote{\url{https://github.com/jgorset/facepy}}
+ library that changes proxy continuously and simulates request all around the world. Every request is made after a random delay timeout, chosen to simulate real world's typical application calls.
 
 
 A batch request makes possible to query the API 50 times at one, optimizing the latency created by http's connection opening and closing.  Each query is composed by two different groups of graph Api subqueries, one group for user profiles and one group for Facebook pages. All the two groups of requests put together the names generated in the previous step. Each request return at most 30 entities, the limit is chosen not to have a too large amount of useless data: most of the time the right company page/user comes in the first 20-30 results.
@@ -227,7 +235,7 @@ After the process of score assignment a subset of results is used to to train th
 
 A random forest is a type of classification algorithm that uses a multitude of decision trees for finding the resulting class of an input entity. The output is defined by the mode of the classes of all the decision trees that operate each one on a subset of the total of the attributes given to the classifier. The main principle is that using a lot of the so called "weak learners" (the single decision tree) on all the same target, we can obtain a "strong learner" (the random forest) made by their single valuations. Basing the conclusion on the mode of the single outputs has a drawback, as more and more trees are used the error rate will rise but contrariwise, as we lower them, the strength of the single element goes down: a difficult task is finding the number m of elements.
 
-Random Forest is generally faster than the other types of classification algorithms, and this is one of the reasons because it's the best algorithm found for this problem\cite{randomforest}. In a slightly different problem, the classification of websites instead of Facebook pages/users, SVM was implemented but the running time was tens of times longer than Random Forest and the results were even worse. This shows the second reason of why Random Forest seems to be better than SVM or other approaches: it's easier and faster to set, to regulate and to train.
+Random Forest is generally faster than the other types of classification algorithms, and this is one of the reasons because it's the best algorithm found for this problem\cite{randomforestart}. In a slightly different problem, the classification of websites instead of Facebook pages/users, SVM was implemented but the running time was tens of times longer than Random Forest and the results were even worse. This shows the second reason of why Random Forest seems to be better than SVM or other approaches: it's easier and faster to set, to regulate and to train.
 Other important facts that showed Random Forest Classification Algorithm as the best for this job are that it's very good avoiding overfitting, that it's solid with outliers and that it works fine with partial and dirty data.
 
 The first step when somebody is working with a machine learning algorithm is finding a useful training subset of the data. The main training subset is composed by 60\% of the data, splitted randomly from the main dataset.
@@ -237,4 +245,6 @@ At the end, the trained classifier is tested with the remaining 40\% of the data
 In the training step, instead of giving parameters as possible values, the approach used was to give them as distribution with the Randomize Grid Search method. Randomize Grid Search randomly samples the distribution, then tests the different parameters and takes the better ones. The method uses 100 samples for the training dataset. This method works fine with this problem because it gives decent results if the distribution is uniform (as it is) and works in a reasonable amount of time.
 
 The results with the first training set were not very good. This problem was caused by the fact that ATECO n.56's companies only had 6,000 pages/users classified and because many of that pages were false positive and many other pages that were missing in the initial index were found right in the training set.
-To avoid this huge problem we opened a story on CrowdFlower\footnote{\url{http://www.crowdflower.com/}}, asking people to verify if the pages associated by the classfier were right, wrong. This process help us redesigning the training set without false positive and true negative. This may seems a conscious modification of the training dataset to have "better final result" but, in reality, it is not overfitting because it only fix error that should not be in the first dataset. This solution was the only adoptable because the only platform that surely knows if a page is really about a company is Facebook itself.
+To avoid this huge problem we opened a story on CrowdFlower
+%\footnote{\url{http://www.crowdflower.com/}}
+, asking people to verify if the pages associated by the classfier were right, wrong. This process help us redesigning the training set without false positive and true negative. This may seems a conscious modification of the training dataset to have "better final result" but, in reality, it is not overfitting because it only fix error that should not be in the first dataset. This solution was the only adoptable because the only platform that surely knows if a page is really about a company is Facebook itself.

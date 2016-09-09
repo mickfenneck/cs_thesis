@@ -1,36 +1,30 @@
 \chapter*{Summary} % senza numerazione
 \label{Summary}
 
-
-
 \addcontentsline{toc}{chapter}{Summary} % da aggiungere comunque all'indice
-
 Nowadays companies are getting more and more connected with potential customers with the help of social networks. These instruments are not only supposed to help people getting linked and chat together but also to give public figures and companies a way to show themselves and to get promoted. Social Networks directly provide services for advertisement: Facebook Ads for Facebook, Twitter Ads for Twitter etc. These services are developed to help people and organizations promoting themselves on that particular platform and usually aren't very useful as a platforms itselves to manage an entire lead generation campaign. Companies are supported only in the brand and products promotion, meaning that the ones that want to find potential customers are generally left alone. The lead generation process, the generation of consumer interest or inquiry into products or services of a business
 %\footnote{\url{https://en.wikipedia.org/wiki/Lead\_generation}}
 , requires company to have a list of potential customers and, most important, a way to connect with them.
 
 
-
-%\section{Aim of the project}
 The aim of this project is to show a practical solution to connect real companies with their social pages.
 Such solution is meant to be implemented in a bigger platform for lead generation that will help companies in the path of finding other businesses that may be interested in buying specific products. 
-The solution shown connects Italian companies with their Facebook page in order to enrich companies' description on Atoka
-%\footnote{{https://atoka.io/}}
-, a leading tool developed by SpazioDati
-%\footnote{\url{http://spaziodati.eu/en/}
- that collects structured data and information of all the 6 million companies currently opened in Italy.
-
-
+The solution shown connects Italian companies with their Facebook page in order to enrich companies' description on Atoka\cite{atoka}, a leading tool developed by SpazioDati\cite{spaziodati} that collects structured data and information of all the 6 million companies currently opened in Italy.
 
 
 The first problem faced was to determine if companies really structure their facebook data in pages or if they use facebook users as pages. 
-From a legal point of view it's against the Facebook Terms to use your personal account to represent something other than yourself (ex: your business), and you could permanently lose access to your account if you don't convert it to a Page. Taking care of the fact that Akota aims to give the more information it can about a company, team decided to do a first exploratory analysis to determine if italian companies really used one facebook pages. The results show that a lot of businesses still use facebook user as pages. The main reason found is that small companies can't afford to pay a single person to work on public relation, this cause the fact that the bigger companies are the more structured their facebook data was.
+From a legal point of view it's against the Facebook Terms to use your personal account to represent something other than yourself (ex: your business), and you could permanently lose access to your account if you don't convert it to a Page. Taking care of the fact that Akota aims to give the more information it can about a company, team decided to do a first exploratory analysis to determine if italian companies really used one facebook pages. The results show that a lot of businesses still use facebook user as pages. The main reason found is that small companies can't afford to pay a single person to work on public relation, this cause the fact that the bigger companies are the more structured their Facebook data was.
 \cite{facebooksum}
+The only way to get the data of a Facebook page or user is to query Facebook GraphAPI\cite{graphapi} by possible names of it. The project was developed by querying Facebook with a lot of Batch Requests in order to create a wide index of Facebook data locally available and structured to be compared with the existing company index. One of the greatest problem was to structure the data in a reasonable way: most of Facebook pages don't have the data in the proper place: as said before the creation of the page is usually done by non-expert people and this lack of expertise lead to have everything in the main section, without the division in the proper fields provided by Facebook.
+An example of the description field that collects everything without the division in fields can be:
+%TODO: trovo un modo per farlo figurare come esempio
+Hi! We are NAMEOFCOMPANY, you can find us in ADDRESS. Our telephone number is: NUMBER.
 
-In order to 
-%\section{Dati elaborati}
-%\section{Conclusions}
 
+The main techniques used in this project are described in the implementation section.
+The classification algorithm that best fits in this analysis is Random Forest and the paper tries to explain why it's the best choice available.
+This project had an important effect on Spaziodati companies' index, finding facebook pages for more than 800\% of the previous values indexed.
+The graduand worked on this project for the entire duration of the internship at Spaziodati (plus more months at the end of it), from the exploratory analysis at the beginning to the integration in the previous workflow.
 %
 %  Sommario è un breve riassunto del lavoro svolto dove si descrive l'obiettivo, l'oggetto della tesi, le 
 %metodologie e le tecniche usate, i dati elaborati e la spiegazione delle conclusioni alle quali siete arrivati.  %

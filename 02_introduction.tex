@@ -1,18 +1,22 @@
 \chapter{Introduction} % senza numerazione
-
-\section{Introduction}
 One important part of companies' public relations is being connected with potential customers and make it easy to be found in the huge quantity of data available by potential clients. In a connected world, where many companies have a Facebook page (and many a website too), it's difficult to find somebody interested in buying your product or solution. As introduced before, social networks provide advertising services that are vertical to the particular platform (ex. Facebook, Twitter, etc.) but a marketing platform for lead generation service needs to link social networks' data with existing companies legally registered in the real world.
 
 The paper analyze the process of connecting Italian companies with their Facebook pages or user profile.
 The aim of the project is to create a model that can automatically find if a Facebook page is the official (and real) page of a determined company. This job is very simple if it's done by a human but it can't be done by people because of time lacking: nobody could find the right match for more than 6 million companies in a reasonable amount of time. The only way to overcome human computational time and cost is to develop a prediction algorithm that can learn by itself to recognize an official page (or user) from a set of potential pages (and users).
 
-The paper analyze only the subset of companies that has ATECO code n.56. ATECO n.56 is the code that collect companies that operate in the food sector
-%\footnote{\url{http://www3.istat.it/strumenti/definizioni/ateco\\ /ateco.html?versione=2007.3&codice=I-56}}
-. This limitation is caused by time reason: the classification time that the VPS will spend analyzing all the 6 million companies will probably be more than 20 days. Apart from time causes the process needs to be integrated with Spaziodati's information retrieval pipeline and the automation process made with Azkaban Flow is not described in this paper.
+\begin{figure}
+\centering
+\includegraphics[width=0.4\textwidth]{img/ateco_tab.jpg}
+\caption{Subdivision of ATECO 56.}
+\label{Fig.1}
+\end{figure}
+
+The paper analyze only the subset of companies that has ATECO code n.56. ATECO n.56 is the code that collect companies that operate in the food sector\cite{istat}. This limitation is caused by time reason: the classification time that the VPS will spend analyzing all the 6 million companies will probably be more than 20 days. Apart from time causes the process needs to be integrated with Spaziodati's information retrieval pipeline and the automation process made with Azkaban Flow is not described in this paper mainly for time, space and copyright reasons. Some data contained in the paper will also be more qualitative than quantitative in order to respect the non disclosure agreement signed with Cerved Group SPA for the usage of the companies' data index.
 
 This problem was an important step in upgrading company information available on Atoka and gained priority at SpazioDati, making the company invest money and time to develop this project. This approach might also be extended to different information and usages in similar problems.
-The solution developed was born after discussion with SpazioDati's developers, that have big experience in comparable problems (like websites classification etc), taking care of the previous problem solution and hurdles found developing that.
+The solution developed was born after discussion with SpazioDati's developers, that have big experience in comparable problems. The most similar problem is the one developed by Spaziodati to connect companies' data with websites and it's described in the related work section. This solution was developed directly with a random forest implementaion, taking care of the previous problem solution and hurdles found in the development of the Website part.
 
-The final solution is a machine learning algorithm application that runs after a score generating application that compute how similar is a page/user data collected to the company data already suited in Atoka Index. The machine learning algorithm chosen to classify the data in this project is Random Forest Classifier and the solution will explain why, in this situation, a random forest approach is better than other classification algorithms.
+The final solution is a machine learning algorithm application that runs after a score generating application that compute how similar is a page/user data collected to the company data already suited in Atoka Index. The machine learning algorithm chosen to classify the data in this project is Random Forest Classifier and the solution will explain why, in this situation, a random forest approach is better than any other classification algorithms.
 
 %An introduction to the problem.Why it is interesting?Why would anyone care? Why is your solution good?
+%\section{Introduction}
