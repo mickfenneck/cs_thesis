@@ -25,8 +25,8 @@
 % supporto lettere accentate
 %
 %\usepackage[latin1]{inputenc} % per Windows;
-\usepackage[utf8x]{inputenc} % per Linux (richiede il pacchetto unicode);
-%\usepackage[applemac]{inputenc} % per Mac.
+%\usepackage[utf8x]{inputenc} % per Linux (richiede il pacchetto unicode);
+\usepackage[applemac]{inputenc} % per Mac.
 
 \singlespacing
 
@@ -108,21 +108,11 @@
       \input{02_introduction}
       \input{03_motivation}
       \input{04_problem}
-      \input{05_solution}
-	\input{06_conclusions}
-	\input{07_related}
-	\input{08_implementation}
-	\input{09_experiment}
-	%\input{abstract}
-	%\input{introduction}
-	%\input{motivation}
-	%\input{problem}
-	%\input{solution}
-	%\input{conclusions}
-	%\input{experiment}
-	%\input{related}
-	%\input{acknowledgments}
-	%
+ %     \input{05_solution}
+%	\input{06_conclusions}
+%	\input{07_related}
+%	\input{08_implementation}
+%	\input{09_experiment}
       
     \endgroup
 
@@ -130,13 +120,10 @@
     % bibliografia in formato bibtex
     %
     % aggiunta del capitolo nell'indice
-%    \addcontentsline{toc}{chapter}{Bibliografia}
+    \addcontentsline{toc}{chapter}{Bibliography}
     % stile con ordinamento alfabetico in funzione degli autori
-%    \bibliographystyle{plain}
- %   \bibliography{biblio}
-
-
-
+    \bibliographystyle{plain}
+    \bibliography{biblio}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Nota
@@ -148,28 +135,23 @@
 %% La forma della citazione bibliografica va inserita secondo la fonte utilizzata:
 %% 
 %% LIBRI
-%% Cognome e iniziale del nome autore/autori, la data di edizione, titolo, casa editrice, eventuale numero dell’edizione. 
+%% Cognome e iniziale del nome autore/autori, la data di edizione, titolo, casa editrice, eventuale numero dellâedizione. 
 %% 
 %% ARTICOLI DI RIVISTA
 %% Cognome e iniziale del nome autore/autori, titolo articolo, titolo rivista, volume, numero, numero di pagine.
 %% 
 %% ARTICOLI DI CONFERENZA
-%% Cognome e iniziale del nome autore/autori (anno), titolo articolo, titolo conferenza, luogo della conferenza (città e paese), date della conferenza, numero di pagine. 
+%% Cognome e iniziale del nome autore/autori (anno), titolo articolo, titolo conferenza, luogo della conferenza (cittÃ  e paese), date della conferenza, numero di pagine. 
 %% 
 %% SITOGRAFIA
 %% La sitografia contiene un elenco di indirizzi Web consultati e disposti in ordine alfabetico. 
-%% E’ necessario:
-%%   Copiare la URL (l’indirizzo web) specifica della pagina consultata
-%%   Se disponibile, indicare il cognome e nome dell’autore, il titolo ed eventuale sottotitolo del testo
+%% Eâ necessario:
+%%   Copiare la URL (lâindirizzo web) specifica della pagina consultata
+%%   Se disponibile, indicare il cognome e nome dellâautore, il titolo ed eventuale sottotitolo del testo
 %%   Se disponibile, inserire la data di ultima consultazione della risorsa (gg/mm/aaaa).    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 
-%    \titleformat{\chapter}
- %       {\normalfont\Huge\bfseries}{Allegato \thechapter}{1em}{}
-    % sezione Allegati - opzionale
-  %  \appendix
-   % \input{allegati}
 
 \end{document}
