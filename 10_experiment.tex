@@ -1,0 +1,27 @@
+\chapter{Experiment} 
+This final chapter is meant to give some explanation of why and how some technical decision were taken.
+
+\section{GraphAPI Requests, Names, DNS}
+GraphAPI are the proprietary Facebook REST API that developers need to use if they want to access Facebook's graph. 
+
+When we started to use the APIs we immediately found some problems:
+
+\begin{itemize}
+\item Facebook isn't really clear about how many requests a single developer user/app can ask per second, minute, hour or day.
+\item Facebook isn't clear about how many request from the same IP can be asked in a single application.
+\item Facebook isn't clear at all about how many applications can run with similar requests at the same time
+\item Facebook is really foggy in the explanation of what you can ask through the query
+\end{itemize}
+
+\subsection*{Requests and time}
+As explained in the solution section about GraphAPI, Facebook isn't clear about how many requests a single developer user/app can make
+\subsection*{Requests and place}
+\subsection*{Requests and applications}
+\subsection*{Requests and query content}
+
+
+perche tanti nomi e non uno singolo
+sistema di DNS per non essere bannati
+
+\section{Why blocking isn't useful}
+perche blocking e' inutile

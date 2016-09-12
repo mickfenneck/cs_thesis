@@ -1,0 +1,99 @@
+\section{ElasticSearch Index}
+
+Elasticsearch is a search engine based on Lucene. It provides a distributed, multitenant-capable full-text search engine with an HTTP web interface and schema-free JSON documents. Elasticsearch is developed in Java and is released as open source under the terms of the Apache License.\cite{wiki_elastic}
+
+The basic index structure of Elasticsearch is the inverted index, a very versatile data structure. At the same time it's also easy to use and understand. That said, Lucene's implementation is a highly optimized, impressive feat of engineering. We will not venture into Lucene's implementation details, but rather stick to how the inverted index is used and built. That is what influences how we can search and index.\cite{art_elastic}
+
+Having introduced the inverted index as the "bottom" of the abstraction levels, we'll look into:
+\begin{itemize}
+\item How simple searches are performed.
+\item What types of searches can (and cannot) effectively be done, and why, with an inverted index, we transform problems until they look like string-prefix problems.
+\item Why text processing is important.
+\item How indexes are built in "segments" and how that affects searching and updating.
+\item What constitutes a Lucene-index.
+\item The Elasticsearch shard and index.
+\end{itemize}
+
+At that point, we'll know a lot about what happens inside a single Elasticsearch node when searching as well as indexing. The second article in the series will cover the distributed aspects of Elasticsearch.
+
+\subsection*{Inverted Indexes and Index Terms}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{img/elastic.png}
+\caption{Fig ?. Sample documents and resulting inverted index}
+\label{Fig.1}
+\end{figure}
+
+
+Sample documents and resulting inverted index
+Let's say we have these three simple documents: "Winter is coming.", "Ours is the fury." and "The choice is yours.". After some simple text processing (lowercasing, removing punctuation and splitting words), we can construct the "inverted index" shown in the figure.
+
+The inverted index maps terms to documents (and possibly positions in the documents) containing the term. Since the terms in the dictionary are sorted, we can quickly find a term, and subsequently its occurrences in the postings-structure. This is contrary to a "forward index", which lists terms related to a specific document.
+
+A simple search with multiple terms is then done by looking up all the terms and their occurrences, and take the intersection (for AND searches) or the union (for OR searches) of the sets of occurrences to get the resulting list of documents. More complex types of queries are obviously more elaborate, but the approach is the same: first, operate on the dictionary to find candidate terms, then on the corresponding occurrences, positions, etc.
+
+Consequently, an index term is the unit of search. The terms we generate dictate what types of searches we can (and cannot) efficiently do.
+
+
+\subsection*{Building Indexes}
+
+When building inverted indexes, there's a few things we need to prioritize: search speed, index compactness, indexing speed and the time it takes for new changes to become visible.
+
+Search speed and index compactness are related: when searching over a smaller index, less data needs to be processed, and more of it will fit in memory. Both, particularly compactness, come at the cost of indexing speed, as we'll see.
+
+To minimize index sizes, various compression techniques are used. For example, when storing the postings (which can get quite large), Lucene does tricks like delta-encoding (e.g., [42, 100, 666] is stored as [42, 58, 566] ), using variable number of bytes (so small numbers can be saved with a single byte), and so on.
+
+Keeping the data structures small and compact means sacrificing the possibility to efficiently update them. In fact, Lucene does not update them at all: the index files Lucene write are immutable, i.e. they are never updated. This is quite different to B-trees, for instance, which can be updated and often lets you specify a fill factor to indicate how much updating you expect.
+
+The exception is deletions. When you delete a document from an index, the document is marked as such in a special deletion file, which is actually just a bitmap which is cheap to update. The index structures themselves are not updated.
+
+Consequently, updating a previously indexed document is a delete followed by a re-insertion of the document. Note that this means that updating a document is even more expensive than adding it in the first place. Thus, storing things like rapidly changing counters in a Lucene index is usually not a good idea - there is no in-place update of values.
+
+When new documents are added (perhaps via an update), the index changes are first buffered in memory. Eventually, the index files in their entirety, are flushed to disk. Note that this is the Lucene-meaning of "flush". Elasticsearch's flush operation involves a Lucene commit and more, covered in the transaction log-section.
+
+When to flush can depend on various factors: how quickly changes must be visible, the memory available for buffering, I/O saturation, etc. Generally, for indexing speed, larger buffers are better, as long as they are small enough that your I/O can keep up2. We go a bit more into detail in the next section.
+
+The written files make up an index segment.
+
+\subsection*{Index Segments}
+
+A Lucene index is made up of one or more immutable index segments, which essentially is a "mini-index". When you do a search, Lucene does the search on every segment, filters out any deletions, and merges the results from all the segments. Obviously, this gets more and more tedious as the number of segments grows. To keep the number of segments manageable, Lucene occasionally merges segments according to some merge policy as new segments are added. Lucene-hacker Michael McCandless has a great post explaining and visualizing segment merging.3 When segments are merged, documents marked as deleted are finally discarded. This is why adding more documents can actually result in a smaller index size: it can trigger a merge.
+
+Elasticsearch and Lucene generally do a good job of handling when to merge segments. Elasticsearch's policies can be tweaked by configuring merge settings. You can also use the optimize API to force merges.
+
+Before segments are flushed to disk, changes are buffered in memory. In the old days (Lucene <2.3), every added document actually existed as its own tiny segment4, and all were merged on flush. Nowadays, there is a DocumentsWriter, which can make larger in-memory segments from a batch of documents. With Lucene 4, there can now be one of these per thread, increasing indexing performance by allowing for concurrent flushing. (Earlier, indexing would have to wait for a flush to complete.)
+
+As new segments are created (either due to a flush or a merge), they also cause certain caches to be invalidated, which can negatively impact search performance. Caches like the field and filter caches are per segment. Elasticsearch has a warmer-API5, so the necessary caches can be "warmed" before the new segment is made available for search.
+
+The most common cause for flushes with Elasticsearch is probably the continuous index refreshing, which by default happens once every second. As new segments are flushed, they become available for searching, enabling (near) real-time search. While a flush is not as expensive as a commit (as it does not need to wait for a confirmed write), it does cause a new segment to be created, invalidating some caches, and possibly triggering a merge.
+
+When indexing throughput is important, e.g. when batch (re-)indexing, it is not very productive to spend a lot of time flushing and merging small segments. Therefore, in these cases it is usually a good idea to temporarily increase the refresh\_interval-setting, or even disable automatic refreshing altogether. One can always refresh manually, and/or when indexing is done.
+
+\subsection*{Elasticsearch Indexes}
+
+"All problems in computer science can be solved by another level of indirection." - David J. Wheeler
+An Elasticsearch index is made up of one or more shards, which can have zero or more replicas. These are all individual Lucene indexes. That is, an Elasticsearch index is made up of many Lucene indexes, which in turn is made up of index segments. When you search an Elasticsearch index, the search is executed on all the shards - and in turn, all the segments - and merged. The same is true when you search multiple Elasticsearch indexes. Actually, searching two Elasticsearch indexes with one shard each is pretty much the same as searching one index with two shards. In both cases, two underlying Lucene indexes are searched.
+
+From this point onwards in this article, when we refer to an "index" by itself, we mean an Elasticsearch index.
+
+A "shard" is the basic scaling unit for Elasticsearch. As documents are added to the index, it is routed to a shard. By default, this is done in a round-robin fashion, based on the hash of the document's id. In the second part of this series, we will look more into how shards are moved around. It is important to know, however, that the number of shards is specified at index creation time, and cannot be changed later on. An early presentation on Elasticsearch by Shay has excellent coverage of why a shard is actually a complete Lucene index, and its various benefits and tradeoffs compared to other methods.
+
+Which Elasticsearch indexes, and what shards (and replicas) search requests are sent to, can be customized in many ways. By combining index patterns, index aliases, and document and search routing, lots of different partitioning and data flow strategies can be implemented. We will not go into them here, but we can recommend Zachary Tong's article on customizing document routing and Shay Banon's presentation on big data, search and analytics. Just to give you some ideas, here are some examples:
+
+Lots of data is time based, e.g. logs, tweets, etc. By creating an index per day (or week, month, ...), we can efficiently limit searches to certain time ranges - and expunge old data. Remember, we cannot efficiently delete from an existing index, but deleting an entire index is cheap.
+When searches must be limited to a certain user (e.g. "search your messages"), it can be useful to route all the documents for that user to the same shard, to reduce the number of indexes that must be searched.
+
+\subsection*{Summary}
+
+To summarize, these are the important properties to be aware of when it comes to how Lucene builds, updates and searches indexes on a single node:
+
+\begin{itemize}
+\item How we process the text we index dictates how we can search. Proper text analysis is important.
+\item Indexes are built first in-memory, then occasionally flushed in segments to disk.
+\item Index segments are immutable. Deleted documents are marked as such.
+\item An index is made up of multiple segments. A search is done on every segment, with the results merged.
+\item Segments are occasionally merged.
+\item Field and filter caches are per segment.
+\item Elasticsearch does not have transactions.
+\end{itemize}

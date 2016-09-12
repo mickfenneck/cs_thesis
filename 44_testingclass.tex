@@ -1,0 +1,112 @@
+\section{Testing a Classifier}
+
+To understand how to test a classifier, several concepts have to be explained:
+
+\begin{itemize}
+\item cross-validation
+\item thresholds
+\item mean precision
+\item precision above chance
+\end{itemize}
+
+\subsection*{Cross-Validation}
+
+Our classifier test should be ecologically valid. It should prove our classifier under conditions as close as possible to the production environment.
+
+In production the classifier is trained on many projects where we know the CTRs, but really we would like to know how the classifier predicts CTRs for a new project it has never seen before.
+
+We test our classifier using a technique called "cross-validation": train the classifier on all projects except for one. Of course, we also know the correct CTRs for this held-out project, so we can see how well the classifier does on it, without cheating by training the classifier on the hold-out. We do this in turn with each project. See figure ADDNUM.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{img/testclass/1.png}
+\caption{
+}
+\label{Fig.1}
+\end{figure}
+
+Let’s say we have projects A through F. We train a classifier on projects A through E, and test on F. Then we train on A and C through F, and test on B. We do this in turn, holding out each project, until we train on A through E and test on F. Each project is a subject in our experiment, with subjects A through F (see figure below).
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\textwidth]{img/testclass/2.jpg}
+\caption{
+}
+\label{Fig.1}
+\end{figure}
+
+Finally, we collect the results from each cross-validation run for statistical analysis. The experimental question we want to answer: does the classifier give us any more information about the CTR than just guessing?
+
+\subsection*{Thresholds}
+The classifier predicts whether the input vector would result in a low or high CTR. The classifier’s output is a number from zero to one, give or take. A zero predicts low CTR, a one predicts high CTR. But what do we do if the classifier outputs a value in between, say a 0.4 or a 0.6? We need to choose a threshold. Above this value we treat the classifier output as predicting high CTR. Below this value we treat the classifier output as predicting low CTR.
+
+The classifier isn’t perfect, so sometimes it will make mistakes. Sometimes the classifier will incorrectly predict that a high CTR item is low (a "miss"), and sometimes the classifier will incorrectly predict that a low CTR item is high (a "false alarm").
+
+The following figures show a frequency distribution for the classifier output for both low and high CTR items. High CTR items, in green, tend to result in a classifier output towards 1. Low CTR items, in red, tend to result in classifier output towards 0. Note that in all three figures the distance between the two curves remains unchanged. All that changes is the threshold.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{img/testclass/3.png}
+\caption{
+}
+\label{Fig.1}
+\end{figure}
+
+Assume we have a total of 1,000 data points, evenly split between low and high CTR. In the above figure, our threshold is rather high (say, 0.85). This results in a relatively low false alarm rate (only 50 items in total are false alarms), and a rather high miss rate (100 items that are in truth high CTR are missed).
+
+In the next figure, below, moving the threshold to the left (say, to 0.75) means a higher false alarm rate (75) and a lower miss rate (90).
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{img/testclass/4.png}
+\caption{
+}
+\label{Fig.1}
+\end{figure}
+
+
+In the figure below, at the lowest threshold (say, 0.40), our false alarm rate goes up to 100, and our miss rate goes down to 75. So as we lower our threshold, our false alarm rate goes up from 50 to 75 to 100, while our miss rate goes down from 100 to 90 to 75.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{img/testclass/5.png}
+\caption{
+}
+\label{Fig.1}
+\end{figure}
+
+
+We draw the threshold based upon which type of error we want to avoid more, misses or false alarms. A higher threshold means more misses and fewer false alarms. A lower threshold means the opposite. Changing the threshold does not change the underlying accuracy of the classifier, it just moves the error around.
+
+\subsection*{Mean Precision}
+The effectiveness of the classifier is the distance between the two means, which does not vary as threshold changes. One way of measuring the effectiveness of the classifier is the "precision". Precision is the number of truly correct items ("hits") divided by the number of items that the classifier says are correct (hits + false alarms).
+
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{img/testclass/6.png}
+\caption{
+}
+\label{Fig.1}
+\end{figure}
+
+In our example above, we have 1,000 data points, of which 500 are high CTR. Our classifier correctly catches 400 high CTRs. The classifier indicates an additional 50 points are high CTRs, when in fact they are low CTRs. This means we have 50 false alarms. These results in a precision of 400/450 = 88.88\% items that the classifier says are correct (hits + false alarms).
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{img/testclass/7.png}
+\caption{
+}
+\label{Fig.1}
+\end{figure}
+
+"Mean precision" takes into account the issues with choosing a threshold, noted above, by performing this calculation at a range of thresholds and taking the mean.
+
+\subsection*{IMPROVEMENT ABOVE CHANCE)
+Unfortunately, in reality it is not as easy as this: projects vary greatly in the number of high CTR keywords. Some projects truly contain only 15\% high CTR,
+ while others are as high as 80\% or 90\%. The finance sector, as an example, will always have a lower average CTR than a popular Facebook game.  We need more than mean precision to measure classifier performance.
+
+Imagine our classifier has a mean precision of 95\%. Although this sounds good, if the project is 95\% high CTR, it’s less impressive. In this case, if we always guessed that something was high CTR, we would do as well as the classifier! Thus, we must report the mean precision after subtracting out the true percentage of high CTR items for that project. We call this "mean precision above chance". In our reports, a mean precision of 10\% means that the classifier has a 10-point higher precision than guessing alone.
+
+
+
