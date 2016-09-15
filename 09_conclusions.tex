@@ -1,5 +1,13 @@
 \chapter{Conclusions} 
-%\section{Conclusions}
+This paper analyzes the problem of finding the official Facebook page (or user) for the Italian companies.
+The process shows:
+\begin{itemize}
+\item how to get data from Facebook
+\item how to clean and normalize the data
+\item how to get a subset of possible Facebook pages/users
+\item the criteria that can be used to compute the similarity scores between company data and Facebook data
+\item how to use random forest to find the most probable Facebook page/user for the company
+\end{itemize}
 
 The final data presents a precision that start from 0.9 and grow to 1 while the recall, starting above at 0.95, after a threshold of 0.75 drastically fall down, getting to zero very fast.\\
 The threshold chosen is 0.73, that assures a precision of 95\% and a recall of 90\%. This means that we give a wrong page one time over twenty and that we loose a good page one time over ten.

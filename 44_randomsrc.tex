@@ -1,0 +1,28 @@
+\section{Random Search for Hyper-Parameter Optimization}
+This section includes the conclusions of the illuminating paper "Random Search for Hyper-Parameter Optimization", that inspired us toward the decision of using a Random Search in our classifier.\cite{rnd_src}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{img/gridsrc.png}
+\caption{Differences between Grid Layout and Random Layout}
+\label{}
+\end{figure}
+
+Grid search experiments are common in the literature of empirical machine learning, where they are used to optimize the hyper-parameters of learning algorithms. It is also common to perform multi- stage, multi-resolution grid experiments that are more or less automated, because a grid experiment with a fine-enough resolution for optimization would be prohibitively expensive. We have shown that random experiments are more efficient than grid experiments for hyper-parameter optimization in the case of several learning algorithms on several data sets. Our analysis of the hyper-parameter response surface ($\Psi$) suggests that random experiments are more efficient because not all hyper- parameters are equally important to tune. Grid search experiments allocate too many trials to the exploration of dimensions that do not matter and suffer from poor coverage in dimensions that are important. Compared with the grid search experiments of Larochelle et al. (2007), random search found better models in most cases and required less computational time.
+Random experiments are also easier to carry out than grid experiments for practical reasons related to the statistical independence of every trial.
+
+\begin{itemize}
+\item The experiment can be stopped any time and the trials form a complete experiment.
+\item If extra computers become available, new trials can be added to an experiment without having to adjust the grid and commit to a much larger experiment.
+\item Every trial can be carried out asynchronously.
+\item If the computer carrying out a trial fails for any reason, its trial can be either abandoned or restarted without jeopardizing the experiment.
+\end{itemize}
+
+Random search is not incompatible with a controlled experiment. To investigate the effect of one hyper-parameter of interest X, we recommend random search (instead of grid search) for optimizing over other hyper-parameters. Choose one set of random values for these remaining hyper-parameters and use that same set for each value of X.
+Random experiments with large numbers of trials also bring attention to the question of how to measure test error of an experiment when many trials have some claim to being best. When using a relatively small validation set, the uncertainty involved in selecting the best model by cross- validation can be larger than the uncertainty in measuring the test set performance of any one model. It is important to take both of these sources of uncertainty into account when reporting the uncertainty around the best model found by a model search algorithm. This technique is useful to all experiments (including both random and grid) in which multiple models achieve approximately the best validation set performance.
+Low-discrepancy sequences developed for QMC integration are also good alternatives to grid- based experiments. In low dimensions (e.g., 1-5) our simulated results suggest that they can hold some advantage over pseudo-random experiments in terms of search efficiency. However, the trials of a low-discrepancy experiment are not i.i.d. which makes it inappropriate to analyze performance with the random efficiency curve. It is also more difficult in practice to conduct a quasi-random experiment because like a grid experiment, the omission of a single point can be more severe. Finally, when there are many hyper-parameter dimensions relative to the computational budget for the experiment, a low-discrepancy trial set is not expected to behave very differently from a pseudo- random one.
+
+Finally, the hyper-parameter optimization strategies considered here are non-adaptive: they do not vary the course of the experiment by considering any results that are already available. Random search was not generally as good as the sequential combination of manual and grid search from an expert (Larochelle et al., 2007) in the case of the 32-dimensional search problem of DBN optimization, because the efficiency of sequential optimization overcame the inefficiency of the grid search employed at each step of the procedure. Future work should consider sequential, adaptive search/optimization algorithms in settings where many hyper-parameters of an expensive function must be optimized jointly and the effective dimensionality is high. We hope that future work in that direction will consider random search of the form studied here as a baseline for performance, rather than grid search.
+
+
+
