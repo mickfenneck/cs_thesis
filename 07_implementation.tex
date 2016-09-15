@@ -60,6 +60,40 @@ Atoka also enables new search options that overtake tradictional filters (like A
 Scikit-learn (formerly scikits.learn) is an open source machine learning library for the Python programming language. It features various classification, regression and clustering algorithms including support vector machines, random forests, gradient boosting, k-means and DBSCAN, and is designed to interoperate with the Python numerical and scientific libraries NumPy and SciPy.
 
 \section{Azkaban Flow}
-some theory about azkaban
+The automation of the entire project was implemented with Azkaban.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{img/azk_base.png}
+\caption{Interface of Azkaban}
+\label{}
+\end{figure}
+
+Azkaban is a batch workflow job scheduler created at LinkedIn to run Hadoop jobs. Azkaban resolves the ordering through job dependencies and provides an easy to use web user interface to maintain and track your workflows.\cite{azka}
+It presents many features:
+\begin{itemize}
+    \item Compatible with any version of Hadoop
+    \item Easy to use web UI
+    \item Simple web and http workflow uploads
+    \item Project workspaces
+    \item Scheduling of workflows
+    \item Modular and pluginable
+    \item Authentication and Authorization
+    \item Tracking of user actions
+    \item Email alerts on failure and successes
+    \item SLA alerting and auto killing
+    \item Retrying of failed jobs
+\end{itemize}
+Azkaban was designed primarily with usability in mind. It has been running at LinkedIn for several years, and drives many of their Hadoop and data warehouse processes.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.8\textwidth]{img/azk_flow.jpg}
+\caption{Spaziodati's Facebook Azkaban Flow}
+\label{}
+\end{figure}
+
+At Spaziodati Azkaban is scheduled once a month and the results are loaded on an Amazon S3 machine. The flow starts reading the Atoka Index and getting the anagraphic data used for computing the features and creating a new elastic search index in order not to modify or kill the production one (that keeps Atoka online). For finding information and normalizing data the flow was developed also to create a new instance of DataTXT, as before, not to touch in any ways the production one. 
+
 
 

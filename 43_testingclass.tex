@@ -15,7 +15,7 @@ Our classifier test should be ecologically valid. It should prove our classifier
 
 In production the classifier is trained on many projects where we know the CTRs, but really we would like to know how the classifier predicts CTRs for a new project it has never seen before.
 
-We test our classifier using a technique called "cross-validation": train the classifier on all projects except for one. Of course, we also know the correct CTRs for this held-out project, so we can see how well the classifier does on it, without cheating by training the classifier on the hold-out. We do this in turn with each project. See figure ADDNUM.
+We test our classifier using a technique called "cross-validation": train the classifier on all projects except for one. Of course, we also know the correct CTRs for this held-out project, so we can see how well the classifier does on it, without cheating by training the classifier on the hold-out. We do this in turn with each project. See Figure 3.5.
 
 \begin{figure}
 \centering
@@ -25,7 +25,7 @@ We test our classifier using a technique called "cross-validation": train the cl
 \label{Fig.1}
 \end{figure}
 
-Let’s say we have projects A through F. We train a classifier on projects A through E, and test on F. Then we train on A and C through F, and test on B. We do this in turn, holding out each project, until we train on A through E and test on F. Each project is a subject in our experiment, with subjects A through F (see figure below).
+Let\textsc{\char13}s say we have projects A through F. We train a classifier on projects A through E, and test on F. Then we train on A and C through F, and test on B. We do this in turn, holding out each project, until we train on A through E and test on F. Each project is a subject in our experiment, with subjects A through F (see Figure 3.6).
 
 \begin{figure}
 \centering
@@ -40,7 +40,7 @@ Finally, we collect the results from each cross-validation run for statistical a
 \subsection*{Thresholds}
 The classifier predicts whether the input vector would result in a low or high CTR. The classifier’s output is a number from zero to one, give or take. A zero predicts low CTR, a one predicts high CTR. But what do we do if the classifier outputs a value in between, say a 0.4 or a 0.6? We need to choose a threshold. Above this value we treat the classifier output as predicting high CTR. Below this value we treat the classifier output as predicting low CTR.
 
-The classifier isn’t perfect, so sometimes it will make mistakes. Sometimes the classifier will incorrectly predict that a high CTR item is low (a "miss"), and sometimes the classifier will incorrectly predict that a low CTR item is high (a "false alarm").
+The classifier isn\textsc{\char13}t perfect, so sometimes it will make mistakes. Sometimes the classifier will incorrectly predict that a high CTR item is low (a "miss"), and sometimes the classifier will incorrectly predict that a low CTR item is high (a "false alarm").
 
 The following figures show a frequency distribution for the classifier output for both low and high CTR items. High CTR items, in green, tend to result in a classifier output towards 1. Low CTR items, in red, tend to result in classifier output towards 0. Note that in all three figures the distance between the two curves remains unchanged. All that changes is the threshold.
 
@@ -102,7 +102,7 @@ In our example above, we have 1,000 data points, of which 500 are high CTR. Our 
 
 "Mean precision" takes into account the issues with choosing a threshold, noted above, by performing this calculation at a range of thresholds and taking the mean.
 
-\subsection*{IMPROVEMENT ABOVE CHANCE)
+\subsection*{Improvement above chance}
 Unfortunately, in reality it is not as easy as this: projects vary greatly in the number of high CTR keywords. Some projects truly contain only 15\% high CTR,
  while others are as high as 80\% or 90\%. The finance sector, as an example, will always have a lower average CTR than a popular Facebook game.  We need more than mean precision to measure classifier performance.
 

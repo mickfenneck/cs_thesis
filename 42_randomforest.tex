@@ -1,28 +1,28 @@
 \section{Random Forests}
 
 The random forest (Breiman, 2001) is an ensemble approach that can also be thought of as a form of nearest neighbor predictor.
-Ensembles are a divide-and-conquer approach used to improve performance. The main principle behind ensemble methods is that a group of "weak learners” can come together to form a "strong learner”. The figure below (taken from here) provides an example. Each classifier, individually, is a "weak learner,” while all the classifiers taken together are a "strong learner”.
-The data to be modeled are the blue circles. We assume that they represent some underlying function plus noise. Each individual learner is shown as a gray curve. Each gray curve (a weak learner) is a fair approximation to the underlying data. The red curve (the ensemble "strong learner”) can be seen to be a much better approximation to the underlying data.
+Ensembles are a divide-and-conquer approach used to improve performance. The main principle behind ensemble methods is that a group of "weak learners" can come together to form a "strong learner". The figure 3.2 provides an example. Each classifier, individually, is a "weak learner", while all the classifiers taken together are a "strong learner".
+The data to be modeled are the blue circles. We assume that they represent some underlying function plus noise. Each individual learner is shown as a gray curve. Each gray curve (a weak learner) is a fair approximation to the underlying data. The red curve (the ensemble "strong learner") can be seen to be a much better approximation to the underlying data.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.5\textwidth]{img/rf_1.png}
-\caption{}
-\label{Fig.1}
+\caption{Analysis on the relationship between ozone and temperature}
+\label{}
 \end{figure}
 
-Trees and Forests. The random forest starts with a standard machine learning technique called a "decision tree” which, in ensemble terms, corresponds to our weak learner. In a decision tree, an input is entered at the top and as it traverses down the tree the data gets bucketed into smaller and smaller sets.
-A Gentle Introduction to Random Forests, Ensembles, and Performance Metrics in a Commercial System - Blog \& Press 11/09/16, 16:42
-In this example, the tree advises us, based upon weather conditions, whether to play ball. For example, if the outlook is sunny and the humidity is less than or equal to 70, then it’s probably OK to play.
+\subsection*{Trees and Forests}
+The random forest starts with a standard machine learning technique called a "decision tree" which, in ensemble terms, corresponds to our weak learner. In a decision tree, an input is entered at the top and as it traverses down the tree the data gets bucketed into smaller and smaller sets.
+In this example, the tree advises us, based upon weather conditions, whether to play ball. For example, if the outlook is sunny and the humidity is less than or equal to 70, then it is probably OK to play.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.5\textwidth]{img/rf_2.jpg}
 \caption{}
-\label{Fig.1}
+\label{}
 \end{figure}
 
-The random forest (see figure below) takes this notion to the next level by combining trees with the notion of an ensemble. Thus, in ensemble terms, the trees are weak learners and the random forest is a strong learner.
+The random forest (see Figure 3.3) takes this notion to the next level by combining trees with the notion of an ensemble. Thus, in ensemble terms, the trees are weak learners and the random forest is a strong learner.
 
 \begin{figure}
 \centering
@@ -32,21 +32,34 @@ The random forest (see figure below) takes this notion to the next level by comb
 \end{figure}
 
 Here is how such a system is trained; for some number of trees T:
-1. Sample N cases at random with replacement to create a subset of the data (see top layer of figure above). The subset should be about 66% of the total set.
-2. At each node:
-A. For some number m (see below), m predictor variables are selected at random from all the
+\begin{enumerate}
+\item Sample N cases at random with replacement to create a subset of the data (see top layer of figure above). The subset should be about 66\% of the total set.
+\item At each node:
+\begin{enumerate}
+\item For some number m (see below), m predictor variables are selected at random from all the
 predictor variables.
-B. The predictor variable that provides the best split, according to some objective function, is
+\item The predictor variable that provides the best split, according to some objective function, is
 used to do a binary split on that node.
-C. At the next node, choose another m variables at random from all predictor variables and do
+\item  At the next node, choose another m variables at random from all predictor variables and do
 the same.
+\end{enumerate}
+\end{enumerate}
+
 Depending upon the value of m, there are three slightly different systems:
-Random splitter selection: m =1
-Breiman’s bagger: m = total number of predictor variables
-Random forest: m << number of predictor variables. Brieman suggests three possible values for m: 1⁄2√m, √m, and 2√m
-Running a Random Forest. When a new input is entered into the system, it is run down all of the trees. The result may either be an average or weighted average of all of the terminal nodes that are reached, or, in the case of categorical variables, a voting majority.
+\begin{itemize}
+\item Random splitter selection: m =1
+\item Breiman\textsc{\char13}s bagger: m = total number of predictor variables
+\item Random forest: m $\ll$ number of predictor variables. Brieman suggests three possible values for m: 1/2$\sqrt{m}$, $\sqrt{m}$, and 2$\sqrt{m}$
+\end{itemize}
+
+\subsection*{Running a Random Forest} 
+When a new input is entered into the system, it is run down all of the trees. The result may either be an average or weighted average of all of the terminal nodes that are reached, or, in the case of categorical variables, a voting majority.
 Note that:
-With a large number of predictors, the eligible predictor set will be quite different from node to node.
-The greater the inter-tree correlation, the greater the random forest error rate, so one pressure on the model is to have the trees as uncorrelated as possible.
-As m goes down, both inter-tree correlation and the strength of individual trees go down. So some optimal value of m must be discovered.
-Strengths and weaknesses. Random forest runtimes are quite fast, and they are able to deal with unbalanced and missing data. Random Forest weaknesses are that when used for regression they cannot predict beyond the range in the training data, and that they may over-fit data sets that are particularly noisy. Of course, the best test of any algorithm is how well it works upon your own data set.
+\begin{itemize}
+\item With a large number of predictors, the eligible predictor set will be quite different from node to node.
+\item The greater the inter-tree correlation, the greater the random forest error rate, so one pressure on the model is to have the trees as uncorrelated as possible.
+\item As m goes down, both inter-tree correlation and the strength of individual trees go down. So some optimal value of m must be discovered.
+\end{itemize}
+
+\subsection*{Strengths and weaknesses}
+Random forest runtimes are quite fast, and they are able to deal with unbalanced and missing data. Random Forest weaknesses are that when used for regression they cannot predict beyond the range in the training data, and that they may over-fit data sets that are particularly noisy. Of course, the best test of any algorithm is how well it works upon your own data set.

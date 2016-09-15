@@ -1,0 +1,31 @@
+\chapter{Experiment} 
+This final chapter is meant to give some explanation of why and how some technical decision were taken.
+
+\section{GraphAPI Requests, Names, DNS}
+GraphAPI are the proprietary Facebook REST API that developers need to use if they want to access Facebook's graph. 
+
+When we started to use the APIs we immediately found some problems:
+
+\begin{itemize}
+\item Facebook isn't really clear about how many requests a single developer user/app can ask per second, minute, hour or day.
+\item Facebook isn't clear about how many request from the same IP can be asked in a single application.
+\item Facebook isn't clear at all about how many applications can run with similar requests at the same time
+\item Facebook is really foggy in the explanation of what you can ask through the query
+\end{itemize}
+
+\subsection*{Our Solution}
+As explained in the solution section about GraphAPI, Facebook isn't clear about how many requests a single developer user/app can make. When we started to develop the GraphAPI part the script used to give error in random moment because Facebook stopped the request without a standard and controllable rule. Besides, Facebook doesn't mention at all how it process different application for each developer or the place of the requests tracked down from the IP address.
+In order to avoid every possible problem, as explained in the solution chapter, we decided to use with different users, with different application, with requests made with multiple IP thanks to a DNS. Even if we hadn't any information we solved the problem and we never got banned again (banning stands for a few minutes without the possibility to ask we requests).
+
+
+\section{Why blocking isn't useful}
+When we were analyzing the problem from a top-down perspective we tried to understand if we could use a blocking technique to classify the Facebook pages in a more affordable and faster way. A blocking technique is a technique where data is clustered before being classified so the classification can be between fewer options in the subset. In our problem it could be useful to cluster the data in blocks that could contain types of companies: banks with banks, grocery stores with grocery stores etc. With a cluster for each type of company of the Facebook pages, in the step of finding the possible pages to compare with the company selected, we could have fewer pages to assign scores and to compute with random forest and it could save time.
+The main problem of using a blocking technique is that you have to find a way to cluster the data and, in our dataset, it wasn't possible because:
+\begin{itemize}
+\item the "category" field of the Facebook page is really tricky and most of the pages use a wrong one, a too specific one or a too general one. With that kind of information it's impossibile to cluster in a reasonable way
+\item the kind of information in all the other fields aren't different between different possible clusters: banks and grocery stores have a telephone number, maybe a website but these information aren't useful for dividing pages in different subsets.
+\item we could try to cluster by analyzing the description field but the information we analyzed showed that companies don't use the filed in a correct mode and instead of putting a clear and specific description of what the company does, they put random information that aren't useful for a clusterization. Most of the times we couldn't extract a single entity from the description.
+\item even if we could find a way to cluster the data, most of the companies wouldn't fit in any cluster so we would have to find the possible pages non only in the specific cluster but even in the  "no clusterizable" cluster too, without having a performance improvement.
+\end{itemize}
+
+

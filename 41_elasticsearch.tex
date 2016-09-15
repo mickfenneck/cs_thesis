@@ -14,15 +14,15 @@ Having introduced the inverted index as the "bottom" of the abstraction levels, 
 \item The Elasticsearch shard and index.
 \end{itemize}
 
-At that point, we'll know a lot about what happens inside a single Elasticsearch node when searching as well as indexing. The second article in the series will cover the distributed aspects of Elasticsearch.
+At that point, we'll know a lot about what happens inside a single Elasticsearch node when searching as well as indexing.
 
 \subsection*{Inverted Indexes and Index Terms}
 
 \begin{figure}
 \centering
 \includegraphics[width=0.8\textwidth]{img/elastic.png}
-\caption{Fig ?. Sample documents and resulting inverted index}
-\label{Fig.1}
+\caption{Sample documents and resulting inverted index}
+\label{}
 \end{figure}
 
 
@@ -72,7 +72,6 @@ When indexing throughput is important, e.g. when batch (re-)indexing, it is not 
 
 \subsection*{Elasticsearch Indexes}
 
-"All problems in computer science can be solved by another level of indirection." - David J. Wheeler
 An Elasticsearch index is made up of one or more shards, which can have zero or more replicas. These are all individual Lucene indexes. That is, an Elasticsearch index is made up of many Lucene indexes, which in turn is made up of index segments. When you search an Elasticsearch index, the search is executed on all the shards - and in turn, all the segments - and merged. The same is true when you search multiple Elasticsearch indexes. Actually, searching two Elasticsearch indexes with one shard each is pretty much the same as searching one index with two shards. In both cases, two underlying Lucene indexes are searched.
 
 From this point onwards in this article, when we refer to an "index" by itself, we mean an Elasticsearch index.

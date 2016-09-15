@@ -149,7 +149,7 @@ After the data is normalized and stored we need to generate the similarity score
 	
 	
 	
-	$ \left(\frac{scoreCommon}{length(username)}\middle,\frac{scoreUncommon}{length(username)}\right)$
+	$ \left(\frac{scoreCommon}{length(username)},\frac{scoreUncommon}{length(username)}\right)$
 	
 	
 	
@@ -158,7 +158,7 @@ After the data is normalized and stored we need to generate the similarity score
     The same thing is done for domain:
     
     
-    $ \left(\frac{scoreCommon}{length(domain)}\middle,\frac{scoreUncommon}{length(domain)}\right)$
+    $ \left(\frac{scoreCommon}{length(domain)},\frac{scoreUncommon}{length(domain)}\right)$
    
    
     \item PHONE
@@ -245,6 +245,34 @@ A random forest is a type of classification algorithm that uses a multitude of d
 
 Random Forest is generally faster than the other types of classification algorithms, and this is one of the reasons because it's the best algorithm found for this problem\cite{randomforestart}. In a slightly different problem, the classification of websites instead of Facebook pages/users, SVM was implemented but the running time was tens of times longer than Random Forest and the results were even worse. This shows the second reason of why Random Forest seems to be better than SVM or other approaches: it's easier and faster to set, to regulate and to train.
 Other important facts that showed Random Forest Classification Algorithm as the best for this job are that it's very good avoiding overfitting, that it's solid with outliers and that it works fine with partial and dirty data.
+
+\subsection*{The comparable Website Problem}
+%inzio
+When the project started the first thing that has been taken in consideration was a similar project previously developed at Spaziodati. The aim of that project was to match website crawled from Italian net with the same company index that was used for this project.
+
+The first step in order to get the official website classification was building a crawler for Italian websites network that could populate an index. That bot crawled all the websites looking for the same informations found in the company index (descriptions, emails, entities, location, social media and obviously the website URL).
+
+After having created and populated the index, information were cleaned and normalized with Dandelion, in a really similar way of what was done in the Facebook project. Once the data was made comparable, as done here, a proprietary algorithm generated a similarity score for each of the websites' fields.
+
+One time the scores were given, the team that was working on the project faced our same problem of choosing the best algorithm for the classification. Unfortunately, instead of having a similar project as we had, they had nothing to compare the project with and to choose the algorithm on the high level so they tried different solutions and took the best one.
+
+Many algorithms were tried but the main two were:
+\begin{itemize}
+\item Random Forest
+\item Support Vector Machine (SVM).
+\end{itemize}
+
+After the tests, the team decided to choose Random Forest mainly for performance of precision and recall over that dataset (obviously this information can't be generalized all over the data available in the world).
+
+In that case Random Forest was the more convenient because it returned values of features that were really useful in order to evaluate the data gathered and to decide how deep the crawler needed to look in the process of data extraction fro the web.
+A second important fact that drove the team in the algorithm decision was that the training time was far less than any other method, a fundamental consideration taking care of the fact that the index need to be continuously updated. Furthermore, Random Forest gives the developer the possibility to work with categorical features without too many manipulations. 
+Last but not least, Random Forest in the best algorithm that an analyst can choose in order to avoid the overfitting problem.
+
+As revealed before, when we had to choose the best algorithm to classify Facebook pages data, instead of taking care of testing the different algorithms - a process that really makes a company waste a lot of time and money -  we decided to compare the data available in the facebook index with the data available in the website's. The result was that the informations were really similar - as said before the two indexes were cleaned and normalized with really alike methods - so we directly decided to use Random Forest for our classification. Before taking the final decision we also decided to try SVM too because we wanted to be 100\% sure about the fact that it was the best also in our case but in less that a week we faced that, apart from the fact that was really harder to configure it right, it was really too slow for our needs and we firmly opted for Random Forest.
+
+%fine
+
+\subsection*{Random Forest in the Facebook Problem}
 
 The first step when somebody is working with a machine learning algorithm is finding a useful training subset of the data. The main training subset is composed by 60\% of the data, splitted randomly from the main dataset.
 Using the Random Forest Algorithm it is not necessary to define a custom cross validation system because it already have its own method to estimate the out-of-bag error. Even if the algorithm comes with this "simplification" we chose not to use it and to implement a cross validation. This choice was driven by the fact that the dataset is really skewed, with only few positive examples and few association between companies contained in Atoka index and theirs Facebook pages. The approach used is stratified three fold cross validation: the training set is sampled in the three fold, making sure to maintain the same positive/negative percentage composition, and for three time the random forest is trained with one fold and tested on the other two.
