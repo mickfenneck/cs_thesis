@@ -82,24 +82,26 @@ We draw the threshold based upon which type of error we want to avoid more, miss
 \subsection*{Mean Precision}
 The effectiveness of the classifier is the distance between the two means, which does not vary as threshold changes. One way of measuring the effectiveness of the classifier is the "precision". Precision is the number of truly correct items ("hits") divided by the number of items that the classifier says are correct (hits + false alarms).
 
+%%%%%%%
 
 \begin{figure}
 \centering
-\includegraphics[width=0.3\textwidth]{img/testclass/6.png}
-\caption{
-}
-\label{Fig.1}
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=.7\linewidth]{img/testclass/6.png}
+  \label{fig:test1}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{img/testclass/7.png}
+  \label{fig:test2}
+\end{minipage}
 \end{figure}
+
+%%%%%%%
 
 In our example above, we have 1,000 data points, of which 500 are high CTR. Our classifier correctly catches 400 high CTRs. The classifier indicates an additional 50 points are high CTRs, when in fact they are low CTRs. This means we have 50 false alarms. These results in a precision of 400/450 = 88.88\% items that the classifier says are correct (hits + false alarms).
 
-\begin{figure}
-\centering
-\includegraphics[width=0.3\textwidth]{img/testclass/7.png}
-\caption{
-}
-\label{Fig.1}
-\end{figure}
 
 "Mean precision" takes into account the issues with choosing a threshold, noted above, by performing this calculation at a range of thresholds and taking the mean.
 
